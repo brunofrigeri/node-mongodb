@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userTodo = mongoose.model('User', {
+const User = mongoose.model('User', {
   email: {
     type: String,
     required: true,
@@ -10,5 +10,5 @@ const userTodo = mongoose.model('User', {
 });
 
 module.exports = {
-  userTodo
+  User
 };
