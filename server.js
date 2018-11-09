@@ -4,6 +4,8 @@ const mongoose = require('./src/db/mongoose');
 
 const app = express();
 
+const port = process.env.PORT || 3000;
+
 const {ObjectID} = require('mongodb');
 const { Todo } = require('./src/models/todo');
 const { User } = require('./src/models/user');
@@ -49,5 +51,5 @@ app.get('/todos/:id', (req, res) => {
 
 });
 
-app.listen(3000);
+app.listen(port);
 
