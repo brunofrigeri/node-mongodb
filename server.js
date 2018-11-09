@@ -10,7 +10,7 @@ const {ObjectID} = require('mongodb');
 const { Todo } = require('./src/models/todo');
 const { User } = require('./src/models/user');
 
-app.use('/', require('./src/routes'));
+//app.use('/', require('./src/routes'));
 app.use(express.json());
 
  app.post('/todos', (req, res) => {
