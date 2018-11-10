@@ -33,7 +33,6 @@ var UserSchema = new mongoose.Schema({
   }]
 });
 
-//Function that f12 doesnt see info that we dont want to show
 UserSchema.methods.toJSON = function () {
   var user = this;
   var userObject = user.toObject();
@@ -46,17 +45,13 @@ UserSchema.methods.generateAuthToken = function () {
   var access = 'auth';
   var token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
 
-  user.tokens = user.tokens.concat({
-    access,
-    token
-  });
+  user.tokens = user.tokens.concat({access, token});
 
   return user.save().then(() => {
     return token;
-  })
+  });
 };
 
-//Model method
 UserSchema.statics.findByToken = function (token) {
   var User = this;
   var decoded;
@@ -66,17 +61,17 @@ UserSchema.statics.findByToken = function (token) {
   } catch (e) {
     return Promise.reject();
   }
-
+  
   return User.findOne({
     '_id': decoded._id,
     'tokens.token': token,
     'tokens.access': 'auth'
   });
-};
+}
 
 UserSchema.pre('save', function(next) {
   var user = this;
-
+  
   if(user.isModified('password')){
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
@@ -86,7 +81,8 @@ UserSchema.pre('save', function(next) {
     });
   } else {
     next();
-  }  
+  }
+
 });
 
 UserSchema.statics.findByCredentials = function (email, password) {
@@ -106,6 +102,19 @@ UserSchema.statics.findByCredentials = function (email, password) {
         }
       });
     });
+  });
+  
+};
+
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {
+        token
+      }
+    }
   });
 };
 

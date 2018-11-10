@@ -6,32 +6,45 @@ const {User} = require('../models/user');
 
 module.exports = {
   async postUser(req, res) {
-    const body = _.pick(req.body, ['email', 'password']);
-    const user = new User(body);
-
-    user.save().then(() => {
-      return user.generateAuthToken();
-    }).then((token) => {
-      res.header('x-auth', token).send(user);
-    }).catch((e) => {
-      res.status(400).send(e);
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User({
+      email: body.email,
+      password: body.password
     });
 
+    user.save().then(() => {
+      return user.generateAuthToken();      
+    }).then((token) => {      
+      res.header('x-auth', token).send(user);
+    }).catch((e) => {
+      res.status(400).send();
+    })
   },
 
-  async getSomething(req, res) {
+  async getUser (req, res) {
     res.send(req.user);
   },
 
-  async getLogin(req, res) {
-    const body = _.pick(req.body, ['email', 'password']);
-    
+  async loginUser (req, res) {
+    var body = _.pick(req.body, ['email', 'password']);
+
     User.findByCredentials(body.email, body.password).then((user) => {
       return user.generateAuthToken().then((token) => {
         res.header('x-auth', token).send(user);
-      });      
+      });
     }).catch((e) => {
       res.status(400).send();
     });
+  },
+
+  async logOutUser (req, res) {
+    req.user.removeToken(req.token).then(() => {
+      res.status(200).send();
+    }, () => {
+      res.status(400).send();
+    });
   }
+
+
+
 };

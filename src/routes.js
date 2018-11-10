@@ -5,16 +5,16 @@ const UserController = require('./controllers/UserControllers');
 const {authenticate} = require('./middleware/authenticate');
 
 //Todo routes Controllers
-routes.post('/todos', TodoController.postSomeTodo);
-routes.get('/todos', TodoController.getAll);
-routes.get('/todos/:id', TodoController.getTodoById);
-routes.delete('/todos/:id', TodoController.deleteById);
-routes.put('/todos/:id', TodoController.updateById);
+routes.post('/todos', authenticate, TodoController.postSomeTodo);
+routes.get('/todos', authenticate, TodoController.getAll);
+routes.get('/todos/:id', authenticate, TodoController.getTodoById);
+routes.delete('/todos/:id', authenticate,TodoController.deleteById);
+routes.put('/todos/:id', authenticate, TodoController.updateById);
 
 //User routes Controllers
-//routes.get('/users', UserController.getUsers);
 routes.post('/users', UserController.postUser);
-routes.get('/users/me', authenticate, UserController.getSomething);
-routes.post('/users/login', UserController.getLogin);
+routes.get('/users/me', authenticate, UserController.getUser);
+routes.post('/users/login', UserController.loginUser);
+routes.delete('/users/login/me/token', authenticate, UserController.logOutUser);
 
 module.exports = routes;
