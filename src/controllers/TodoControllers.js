@@ -101,7 +101,7 @@ module.exports = {
       new: true,
       _creator: req.user._id
     }).then((todo) => {
-      if(!todo){
+      if(!todo){ 
         return res.status(404).send();
       }
 
