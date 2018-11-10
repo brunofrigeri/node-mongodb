@@ -15,9 +15,9 @@ module.exports = {
     return res.json(todo);
   },
 
-  async getAll(req, res) {
+  async getAll(req, res) {        
     const todos = await Todo.find();
-
+    
     return res.json(todos);
   }, 
 
